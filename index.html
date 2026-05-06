@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Estudos - Thalia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: #e5e7eb;
+      overflow: hidden;
+    }
+
+    /* grid tech background */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      background: rgba(17, 24, 39, 0.8);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(99,102,241,0.15);
+      max-width: 420px;
+      width: 90%;
+      border: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #818cf8;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      border: 2px solid #6366f1;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(99,102,241,0.5);
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    p {
+      font-size: 13px;
+      margin-bottom: 25px;
+      color: #9ca3af;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: block;
+      border: 1px solid #1f2937;
+      background: linear-gradient(145deg, #111827, #020617);
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: linear-gradient(120deg, transparent, rgba(99,102,241,0.4), transparent);
+      transition: 0.4s;
+    }
+
+    .btn:hover::after {
+      width: 100%;
+    }
+
+    .btn:hover {
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(99,102,241,0.3);
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #6b7280;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">SYSTEM • EDUCATION PORTAL</div>
+
+    <!-- Troque a URL abaixo pela sua imagem -->
+    <img src="https://i.imgur.com/6VBx3io.png" alt="Avatar Thalia" class="avatar">
+
+    <h1>Thalia</h1>
+    <p>Plataforma de estudos em Informática<br>Frei Orlando</p>
+
+    <div class="buttons">
+      <!-- Substitua os links pelos seus sites -->
+      <a href="#" class="btn">→ HTML Content</a>
+      <a href="#" class="btn">→ P.O.O. Content</a>
+    </div>
+
+    <footer>
+      developed by thalia.dev
+    </footer>
+  </div>
+</body>
+</html>

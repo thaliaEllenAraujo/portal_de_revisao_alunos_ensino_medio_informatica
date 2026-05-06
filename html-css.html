@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de HTML & CSS — Seu Primeiro Site</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #161b25;
+      --card: #1e2535;
+      --border: #2a3347;
+      --accent: #4f9cf9;
+      --accent2: #a78bfa;
+      --accent3: #34d399;
+      --accent4: #f97316;
+      --text: #e2e8f0;
+      --muted: #8899aa;
+      --code-bg: #0a0c10;
+      --tag-html: #f97316;
+      --tag-css: #4f9cf9;
+      --tag-result: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      line-height: 1.7;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 40px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(79, 156, 249, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header .badge {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(79, 156, 249, 0.4);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* SUMÁRIO */
+    .toc {
+      max-width: 900px;
+      margin: 50px auto 0;
+      padding: 0 24px;
+    }
+
+    .toc-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .toc-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .toc-item:hover {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .toc-item .num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      background: rgba(79, 156, 249, 0.1);
+      padding: 2px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 0 24px 80px;
+    }
+
+    /* SECTION */
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(79, 156, 249, 0.12);
+      border: 1px solid rgba(79, 156, 249, 0.3);
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .explanation {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--surface);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .explanation strong {
+      color: var(--text);
+    }
+
+    /* CODE BLOCKS */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .code-lang {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .lang-html {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--tag-html);
+    }
+
+    .lang-css {
+      background: rgba(79, 156, 249, 0.15);
+      color: var(--tag-css);
+    }
+
+    .lang-tip {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--tag-result);
+    }
+
+    .copy-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      color: var(--accent3);
+      border-color: var(--accent3);
+    }
+
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+
+    /* Syntax highlight manual */
+    .kw {
+      color: #a78bfa;
+    }
+
+    /* keywords */
+    .tag {
+      color: #f97316;
+    }
+
+    /* html tags */
+    .attr {
+      color: #4f9cf9;
+    }
+
+    /* attributes */
+    .val {
+      color: #34d399;
+    }
+
+    /* values */
+    .str {
+      color: #fbbf24;
+    }
+
+    /* strings */
+    .com {
+      color: #4a5568;
+      font-style: italic;
+    }
+
+    /* comments */
+    .prop {
+      color: #93c5fd;
+    }
+
+    /* css prop */
+    .sel {
+      color: #f97316;
+    }
+
+    /* css selector */
+    .unit {
+      color: #a78bfa;
+    }
+
+    /* px, %, etc */
+
+    /* PREVIEW BOX */
+    .preview-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .preview-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .preview-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .preview-content {
+      background: #ffffff;
+      padding: 24px;
+      min-height: 80px;
+    }
+
+    /* TIP BOX */
+    .tip {
+      background: rgba(52, 211, 153, 0.07);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      color: #a7f3d0;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tip .icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .warn {
+      background: rgba(249, 115, 22, 0.07);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      color: #fed7aa;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 40px 0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      header {
+        padding: 40px 20px;
+      }
+
+      main {
+        padding: 0 16px 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="badge">📚 Manual do Aluno</div>
+    <h1>Seu Primeiro Site com<br><span>HTML & CSS</span></h1>
+    <p>Um guia passo a passo com exemplos práticos e prontos para usar</p>
+  </header>
+
+  <!-- SUMÁRIO -->
+  <nav class="toc">
+    <p class="toc-title">Conteúdo do Manual</p>
+    <div class="toc-grid">
+      <a class="toc-item" href="#estrutura"><span class="num">01</span> Estrutura básica do HTML</a>
+      <a class="toc-item" href="#texto"><span class="num">02</span> Textos e títulos</a>
+      <a class="toc-item" href="#cores"><span class="num">03</span> Cores e gradientes</a>
+      <a class="toc-item" href="#centralizar"><span class="num">04</span> Centralizar elementos</a>
+      <a class="toc-item" href="#navbar"><span class="num">05</span> Navbar (menu de navegação)</a>
+      <a class="toc-item" href="#botao"><span class="num">06</span> Botões estilizados</a>
+      <a class="toc-item" href="#imagens"><span class="num">07</span> Imagens</a>
+      <a class="toc-item" href="#cards"><span class="num">08</span> Cards (cartões)</a>
+      <a class="toc-item" href="#flex"><span class="num">09</span> Flexbox (organizar itens)</a>
+      <a class="toc-item" href="#paginas"><span class="num">10</span> Mudar de página</a>
+      <a class="toc-item" href="#fontes"><span class="num">11</span> Fontes do Google</a>
+      <a class="toc-item" href="#responsivo"><span class="num">12</span> Site responsivo</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ==================== 01 ==================== -->
+    <section class="section" id="estrutura">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Estrutura básica de um arquivo HTML</h2>
+      </div>
+
+      <div class="explanation">
+        Todo site começa com essa estrutura. Crie um arquivo chamado <strong>index.html</strong>, abra no bloco de notas
+        ou VS Code, e cole o código abaixo. Depois abra no navegador!
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="com">&lt;!-- index.html — todo site começa assim --&gt;</span>
+<span class="com">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"pt-BR"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Meu Primeiro Site<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"estilo.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+
+  <span class="com">&lt;!-- Tudo que aparece na tela vai aqui --&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Olá, mundo!<span class="tag">&lt;/h1&gt;</span>
+
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="icon">💡</span>
+        <span>O arquivo <strong>index.html</strong> é sempre a página principal. O arquivo <strong>estilo.css</strong>
+          fica na mesma pasta e cuida das cores e do visual.</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 02 ==================== -->
+    <section class="section" id="texto">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Textos e títulos</h2>
+      </div>
+
+      <div class="explanation">
+        HTML tem 6 tamanhos de título (h1 a h6) e uma tag para parágrafos. O CSS controla a aparência deles.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;h1&gt;</span>Título principal (maior)<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Título secundário<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Subtítulo<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;p&gt;</span>Este é um parágrafo de texto normal.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>Você pode deixar texto <span class="tag">&lt;strong&gt;</span>em negrito<span class="tag">&lt;/strong&gt;</span> assim.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>E em <span class="tag">&lt;em&gt;</span>itálico<span class="tag">&lt;/em&gt;</span> assim.<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">h1</span> {
+  <span class="prop">font-size</span>: <span class="unit">48px</span>;
+  <span class="prop">color</span>: <span class="str">#1a1a2e</span>;
+  <span class="prop">font-family</span>: <span class="str">Arial, sans-serif</span>;
+}
+
+<span class="sel">p</span> {
+  <span class="prop">font-size</span>: <span class="unit">16px</span>;
+  <span class="prop">color</span>: <span class="str">#444444</span>;
+  <span class="prop">line-height</span>: <span class="unit">1.6</span>; <span class="com">/* espaço entre linhas */</span>
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content">
+          <h1 style="font-size:32px;color:#1a1a2e;font-family:Arial">Título principal</h1>
+          <h2 style="font-size:22px;color:#1a1a2e;font-family:Arial">Título secundário</h2>
+          <p style="color:#444;font-family:Arial;margin-top:8px">Este é um parágrafo de texto normal. Você pode deixar
+            texto <strong>em negrito</strong> ou em <em>itálico</em>.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 03 ==================== -->
+    <section class="section" id="cores">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Cores e gradientes</h2>
+      </div>
+
+      <div class="explanation">
+        Cores podem ser escritas pelo <strong>nome</strong> (red, blue), por <strong>código hexadecimal</strong>
+        (#ff0000) ou por <strong>RGB</strong>. Gradientes misturam duas ou mais cores — ótimo para fundos!
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Cor sólida</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">body</span> {
+  <span class="prop">background-color</span>: <span class="str">#f0f4ff</span>; <span class="com">/* fundo da página */</span>
+  <span class="prop">color</span>: <span class="str">#222222</span>;           <span class="com">/* cor do texto */</span>
+}
+
+<span class="sel">h1</span> {
+  <span class="prop">color</span>: <span class="str">#e63946</span>;  <span class="com">/* vermelho vibrante */</span>
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Gradiente no fundo</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.caixa-colorida</span> {
+  <span class="prop">background</span>: <span class="kw">linear-gradient</span>(<span class="unit">135deg</span>, <span class="str">#667eea</span>, <span class="str">#764ba2</span>);
+  <span class="com">/* 135deg = ângulo; depois as cores, separadas por vírgula */</span>
+  <span class="prop">padding</span>: <span class="unit">40px</span>;
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">border-radius</span>: <span class="unit">12px</span>;
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"caixa-colorida"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>Texto com fundo gradiente 🎨<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content" style="background:#f0f4ff">
+          <div
+            style="background:linear-gradient(135deg,#667eea,#764ba2);padding:28px;border-radius:12px;color:white;font-family:Arial">
+            <h2 style="font-size:20px">Texto com fundo gradiente 🎨</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="icon">🎨</span>
+        <span>Use o site <strong>uigradients.com</strong> para descobrir combinações de cores bonitas e copiar o código
+          CSS pronto!</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 04 ==================== -->
+    <section class="section" id="centralizar">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Centralizar elementos</h2>
+      </div>
+
+      <div class="explanation">
+        Centralizar é uma das coisas mais comuns num site. Veja as duas formas mais usadas:
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Centralizar texto</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">h1</span> {
+  <span class="prop">text-align</span>: <span class="kw">center</span>; <span class="com">/* centraliza o texto */</span>
+}
+
+<span class="sel">p</span> {
+  <span class="prop">text-align</span>: <span class="kw">center</span>;
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Centralizar um bloco na tela (Flexbox)</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.container</span> {
+  <span class="prop">display</span>: <span class="kw">flex</span>;
+  <span class="prop">justify-content</span>: <span class="kw">center</span>;  <span class="com">/* centraliza na horizontal */</span>
+  <span class="prop">align-items</span>: <span class="kw">center</span>;      <span class="com">/* centraliza na vertical */</span>
+  <span class="prop">height</span>: <span class="unit">200px</span>;
+  <span class="prop">background</span>: <span class="str">#f0f4ff</span>;
+}
+
+<span class="sel">.caixa</span> {
+  <span class="prop">background</span>: <span class="str">#4f9cf9</span>;
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">padding</span>: <span class="unit">20px 40px</span>;
+  <span class="prop">border-radius</span>: <span class="unit">10px</span>;
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"container"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"caixa"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Estou centralizado! 🎯<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content"
+          style="display:flex;justify-content:center;align-items:center;height:140px;background:#f0f4ff">
+          <div style="background:#4f9cf9;color:white;padding:16px 32px;border-radius:10px;font-family:Arial">
+            Estou centralizado! 🎯
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 05 ==================== -->
+    <section class="section" id="navbar">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Navbar (menu de navegação)</h2>
+      </div>
+
+      <div class="explanation">
+        A navbar fica no topo do site e tem os links para as páginas. Ela usa a tag <strong>&lt;nav&gt;</strong> e links
+        com a tag <strong>&lt;a&gt;</strong>.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;nav</span> <span class="attr">class</span>=<span class="str">"navbar"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"logo"</span><span class="tag">&gt;</span>MeuSite<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;ul</span> <span class="attr">class</span>=<span class="str">"menu"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="str">"index.html"</span><span class="tag">&gt;</span>Início<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="str">"sobre.html"</span><span class="tag">&gt;</span>Sobre<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tag">&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="str">"contato.html"</span><span class="tag">&gt;</span>Contato<span class="tag">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/nav&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.navbar</span> {
+  <span class="prop">background</span>: <span class="str">#1a1a2e</span>;
+  <span class="prop">display</span>: <span class="kw">flex</span>;
+  <span class="prop">justify-content</span>: <span class="kw">space-between</span>; <span class="com">/* logo à esq, menu à dir */</span>
+  <span class="prop">align-items</span>: <span class="kw">center</span>;
+  <span class="prop">padding</span>: <span class="unit">0 40px</span>;
+  <span class="prop">height</span>: <span class="unit">60px</span>;
+}
+
+<span class="sel">.logo</span> {
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">font-size</span>: <span class="unit">22px</span>;
+  <span class="prop">font-weight</span>: <span class="kw">bold</span>;
+}
+
+<span class="sel">.menu</span> {
+  <span class="prop">list-style</span>: <span class="kw">none</span>; <span class="com">/* remove os pontinhos da lista */</span>
+  <span class="prop">display</span>: <span class="kw">flex</span>;
+  <span class="prop">gap</span>: <span class="unit">30px</span>;
+}
+
+<span class="sel">.menu a</span> {
+  <span class="prop">color</span>: <span class="str">#aaaaaa</span>;
+  <span class="prop">text-decoration</span>: <span class="kw">none</span>; <span class="com">/* remove o sublinhado */</span>
+  <span class="prop">font-size</span>: <span class="unit">15px</span>;
+  <span class="prop">transition</span>: <span class="str">color 0.2s</span>;
+}
+
+<span class="sel">.menu a:hover</span> { <span class="com">/* efeito ao passar o mouse */</span>
+  <span class="prop">color</span>: <span class="str">white</span>;
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content" style="padding:0">
+          <nav
+            style="background:#1a1a2e;display:flex;justify-content:space-between;align-items:center;padding:0 30px;height:56px">
+            <div style="color:white;font-size:20px;font-weight:bold;font-family:Arial">MeuSite</div>
+            <div style="display:flex;gap:24px">
+              <a href="#" style="color:#aaa;text-decoration:none;font-family:Arial;font-size:14px">Início</a>
+              <a href="#" style="color:#aaa;text-decoration:none;font-family:Arial;font-size:14px">Sobre</a>
+              <a href="#" style="color:#aaa;text-decoration:none;font-family:Arial;font-size:14px">Contato</a>
+            </div>
+          </nav>
+          <p style="font-family:Arial;font-size:13px;color:#666;padding:16px">← Passe o mouse nos links para ver o
+            efeito de hover!</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 06 ==================== -->
+    <section class="section" id="botao">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Botões estilizados</h2>
+      </div>
+
+      <div class="explanation">
+        A tag <strong>&lt;button&gt;</strong> cria um botão clicável. Com CSS, você pode deixar ele bonito e com efeito
+        ao passar o mouse.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;button</span> <span class="attr">class</span>=<span class="str">"btn-primario"</span><span class="tag">&gt;</span>Clique Aqui<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">class</span>=<span class="str">"btn-secundario"</span><span class="tag">&gt;</span>Saiba Mais<span class="tag">&lt;/button&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.btn-primario</span> {
+  <span class="prop">background</span>: <span class="str">#4f9cf9</span>;
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">border</span>: <span class="kw">none</span>;
+  <span class="prop">padding</span>: <span class="unit">12px 28px</span>;
+  <span class="prop">border-radius</span>: <span class="unit">8px</span>;
+  <span class="prop">font-size</span>: <span class="unit">16px</span>;
+  <span class="prop">cursor</span>: <span class="kw">pointer</span>; <span class="com">/* muda o cursor para mãozinha */</span>
+  <span class="prop">transition</span>: <span class="str">background 0.2s</span>;
+}
+<span class="sel">.btn-primario:hover</span> {
+  <span class="prop">background</span>: <span class="str">#2563eb</span>; <span class="com">/* azul mais escuro ao passar o mouse */</span>
+}
+
+<span class="sel">.btn-secundario</span> {
+  <span class="prop">background</span>: <span class="kw">transparent</span>;
+  <span class="prop">color</span>: <span class="str">#4f9cf9</span>;
+  <span class="prop">border</span>: <span class="unit">2px</span> <span class="kw">solid</span> <span class="str">#4f9cf9</span>;
+  <span class="prop">padding</span>: <span class="unit">12px 28px</span>;
+  <span class="prop">border-radius</span>: <span class="unit">8px</span>;
+  <span class="prop">font-size</span>: <span class="unit">16px</span>;
+  <span class="prop">cursor</span>: <span class="kw">pointer</span>;
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content" style="display:flex;gap:16px;flex-wrap:wrap">
+          <button
+            style="background:#4f9cf9;color:white;border:none;padding:12px 28px;border-radius:8px;font-size:15px;cursor:pointer;font-family:Arial">Clique
+            Aqui</button>
+          <button
+            style="background:transparent;color:#4f9cf9;border:2px solid #4f9cf9;padding:12px 28px;border-radius:8px;font-size:15px;cursor:pointer;font-family:Arial">Saiba
+            Mais</button>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 07 ==================== -->
+    <section class="section" id="imagens">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Imagens</h2>
+      </div>
+
+      <div class="explanation">
+        A tag <strong>&lt;img&gt;</strong> exibe imagens. O atributo <strong>src</strong> é o endereço da imagem. Use
+        imagens da sua pasta ou da internet.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="com">&lt;!-- Imagem da sua pasta (coloque junto com o index.html) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"foto.jpg"</span> <span class="attr">alt</span>=<span class="str">"Minha foto"</span> <span class="attr">class</span>=<span class="str">"foto"</span><span class="tag">&gt;</span>
+
+<span class="com">&lt;!-- Imagem da internet (use a URL completa) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"https://picsum.photos/400/300"</span> <span class="attr">alt</span>=<span class="str">"Foto aleatória"</span> <span class="attr">class</span>=<span class="str">"foto"</span><span class="tag">&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.foto</span> {
+  <span class="prop">width</span>: <span class="unit">100%</span>;          <span class="com">/* ocupa toda a largura disponível */</span>
+  <span class="prop">max-width</span>: <span class="unit">400px</span>;    <span class="com">/* mas não passa de 400px */</span>
+  <span class="prop">border-radius</span>: <span class="unit">12px</span>; <span class="com">/* cantos arredondados */</span>
+  <span class="prop">display</span>: <span class="kw">block</span>;
+  <span class="prop">margin</span>: <span class="unit">0 auto</span>;      <span class="com">/* centraliza a imagem */</span>
+}</pre>
+      </div>
+
+      <div class="tip">
+        <span class="icon">💡</span>
+        <span>Sempre use o atributo <strong>alt</strong> com uma descrição da imagem. Isso ajuda pessoas com deficiência
+          visual e é bom para o Google também!</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 08 ==================== -->
+    <section class="section" id="cards">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Cards (cartões de conteúdo)</h2>
+      </div>
+
+      <div class="explanation">
+        Cards são caixas que organizam informações de forma visual. São muito usados em sites de notícias, portfólios e
+        lojas.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"https://picsum.photos/300/180"</span> <span class="attr">alt</span>=<span class="str">"Foto"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card-conteudo"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h3&gt;</span>Título do Card<span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Uma descrição curta sobre o assunto do card.<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;button&gt;</span>Ver mais<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.card</span> {
+  <span class="prop">background</span>: <span class="str">white</span>;
+  <span class="prop">border-radius</span>: <span class="unit">12px</span>;
+  <span class="prop">box-shadow</span>: <span class="unit">0 4px 20px</span> <span class="str">rgba(0,0,0,0.1)</span>;
+  <span class="prop">overflow</span>: <span class="kw">hidden</span>; <span class="com">/* a imagem não sai dos cantos */</span>
+  <span class="prop">max-width</span>: <span class="unit">300px</span>;
+  <span class="prop">transition</span>: <span class="str">transform 0.2s</span>;
+}
+<span class="sel">.card:hover</span> {
+  <span class="prop">transform</span>: <span class="kw">translateY</span>(<span class="unit">-5px</span>); <span class="com">/* sobe um pouco ao hover */</span>
+}
+
+<span class="sel">.card img</span> {
+  <span class="prop">width</span>: <span class="unit">100%</span>;
+  <span class="prop">display</span>: <span class="kw">block</span>;
+}
+
+<span class="sel">.card-conteudo</span> {
+  <span class="prop">padding</span>: <span class="unit">20px</span>;
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content" style="background:#f5f5f5">
+          <div
+            style="background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.12);overflow:hidden;max-width:260px;font-family:Arial">
+            <img src="https://picsum.photos/300/160?random=1" alt="Foto" style="width:100%;display:block">
+            <div style="padding:16px">
+              <h3 style="font-size:16px;color:#1a1a2e;margin-bottom:8px">Título do Card</h3>
+              <p style="font-size:13px;color:#666;margin-bottom:14px">Uma descrição curta sobre o assunto do card.</p>
+              <button
+                style="background:#4f9cf9;color:white;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-size:13px">Ver
+                mais</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 09 ==================== -->
+    <section class="section" id="flex">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Flexbox — Organizar itens lado a lado</h2>
+      </div>
+
+      <div class="explanation">
+        O <strong>Flexbox</strong> é a ferramenta mais usada para organizar elementos em linha. Com ele você coloca
+        cards lado a lado, cria menus, etc.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"linha-de-cards"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>Card 1<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>Card 2<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>Card 3<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">.linha-de-cards</span> {
+  <span class="prop">display</span>: <span class="kw">flex</span>;
+  <span class="prop">gap</span>: <span class="unit">20px</span>;             <span class="com">/* espaço entre os itens */</span>
+  <span class="prop">flex-wrap</span>: <span class="kw">wrap</span>;       <span class="com">/* quebra a linha em telas menores */</span>
+  <span class="prop">justify-content</span>: <span class="kw">center</span>;
+}
+
+<span class="sel">.card</span> {
+  <span class="prop">background</span>: <span class="str">#4f9cf9</span>;
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">padding</span>: <span class="unit">30px 40px</span>;
+  <span class="prop">border-radius</span>: <span class="unit">10px</span>;
+  <span class="prop">font-size</span>: <span class="unit">18px</span>;
+  <span class="prop">font-weight</span>: <span class="kw">bold</span>;
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+        <div class="preview-content" style="background:#f5f5f5">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+            <div
+              style="background:#4f9cf9;color:white;padding:22px 30px;border-radius:10px;font-family:Arial;font-weight:bold">
+              Card 1</div>
+            <div
+              style="background:#a78bfa;color:white;padding:22px 30px;border-radius:10px;font-family:Arial;font-weight:bold">
+              Card 2</div>
+            <div
+              style="background:#34d399;color:white;padding:22px 30px;border-radius:10px;font-family:Arial;font-weight:bold">
+              Card 3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 10 ==================== -->
+    <section class="section" id="paginas">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Mudar de página no site</h2>
+      </div>
+
+      <div class="explanation">
+        Para ter mais de uma página, crie vários arquivos HTML na mesma pasta e use a tag <strong>&lt;a&gt;</strong>
+        para criar links entre eles.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-tip">📁 Estrutura de pastas</span>
+        </div>
+        <pre>meu-site/
+├── index.html      ← página principal
+├── sobre.html      ← página "Sobre"
+├── contato.html    ← página "Contato"
+└── estilo.css      ← arquivo de estilos</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML — Links entre páginas</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="com">&lt;!-- Em qualquer página, crie links assim: --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"index.html"</span><span class="tag">&gt;</span>Ir para Início<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"sobre.html"</span><span class="tag">&gt;</span>Ir para Sobre<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"contato.html"</span><span class="tag">&gt;</span>Ir para Contato<span class="tag">&lt;/a&gt;</span>
+
+<span class="com">&lt;!-- Link para um site externo: --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"https://google.com"</span> <span class="attr">target</span>=<span class="str">"_blank"</span><span class="tag">&gt;</span>
+  Abrir Google em nova aba
+<span class="tag">&lt;/a&gt;</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="icon">💡</span>
+        <span><strong>target="_blank"</strong> faz o link abrir em uma nova aba. Use para links externos (outros sites).
+          Para páginas do seu próprio site, não é necessário.</span>
+      </div>
+
+      <div class="warn">
+        <span class="icon">⚠️</span>
+        <span>Os arquivos precisam estar <strong>na mesma pasta</strong>! Se criar subpastas, o endereço muda:
+          <strong>href="pages/sobre.html"</strong></span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 11 ==================== -->
+    <section class="section" id="fontes">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <h2>Fontes do Google Fonts</h2>
+      </div>
+
+      <div class="explanation">
+        O Google oferece centenas de fontes gratuitas. Basta adicionar um link no <strong>&lt;head&gt;</strong> e usar
+        no CSS!
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML — Adicionar no &lt;head&gt;</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="tag">&lt;head&gt;</span>
+  <span class="com">&lt;!-- Cole esse link antes do link do CSS --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">href</span>=<span class="str">"https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"estilo.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Usar a fonte</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="sel">body</span> {
+  <span class="prop">font-family</span>: <span class="str">'Poppins', sans-serif</span>;
+}
+
+<span class="com">/* O 'sans-serif' é o plano B caso a fonte não carregue */</span></pre>
+      </div>
+
+      <div class="tip">
+        <span class="icon">🔤</span>
+        <span>Acesse <strong>fonts.google.com</strong>, escolha uma fonte, clique em "Get font" e depois copie o código
+          que o site gerar para você.</span>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ==================== 12 ==================== -->
+    <section class="section" id="responsivo">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <h2>Site responsivo (funcionar no celular)</h2>
+      </div>
+
+      <div class="explanation">
+        Um site responsivo se adapta ao tamanho da tela. Usamos <strong>media queries</strong> no CSS para mudar o
+        estilo em telas menores.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML — Tag obrigatória no &lt;head&gt;</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="com">&lt;!-- Sempre inclua essa linha no head! --&gt;</span>
+<span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"viewport"</span> <span class="attr">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — Media Queries</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+        <pre><span class="com">/* Estilo padrão (desktop) */</span>
+<span class="sel">.linha-de-cards</span> {
+  <span class="prop">display</span>: <span class="kw">flex</span>;
+  <span class="prop">gap</span>: <span class="unit">20px</span>;
+}
+
+<span class="sel">.navbar</span> {
+  <span class="prop">padding</span>: <span class="unit">0 40px</span>;
+}
+
+<span class="com">/* Quando a tela for menor que 600px (celular) */</span>
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="unit">600px</span>) {
+
+  <span class="sel">.linha-de-cards</span> {
+    <span class="prop">flex-direction</span>: <span class="kw">column</span>; <span class="com">/* empilha os cards */</span>
+  }
+
+  <span class="sel">.navbar</span> {
+    <span class="prop">padding</span>: <span class="unit">0 16px</span>; <span class="com">/* menos espaço nas laterais */</span>
+  }
+
+  <span class="sel">h1</span> {
+    <span class="prop">font-size</span>: <span class="unit">28px</span>; <span class="com">/* título menor no celular */</span>
+  }
+}</pre>
+      </div>
+
+      <div class="tip">
+        <span class="icon">📱</span>
+        <span>No navegador, pressione <strong>F12</strong> e clique no ícone de celular para simular como seu site
+          aparece no smartphone!</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>📌 Manual feito para alunos iniciantes — HTML &amp; CSS</p>
+    <p style="margin-top:8px;font-size:0.8rem">Dica: salve esse arquivo e abra no navegador para usar como referência
+      enquanto cria seu site!</p>
+  </footer>
+
+  <script>
+    function copiar(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const texto = pre.innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        btn.textContent = '✓ copiado';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'copiar';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+
+</html>
