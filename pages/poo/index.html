@@ -1,672 +1,144 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Java na Prática — Vetores, Matrizes e Funções</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0f0f1a;
-  --surface: #1a1a2e;
-  --card: #16213e;
-  --accent1: #e94560;
-  --accent2: #0f3460;
-  --accent3: #533483;
-  --green: #00d9a3;
-  --yellow: #ffd166;
-  --blue: #06b6d4;
-  --purple: #a78bfa;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --code-bg: #0d1117;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-}
-
-/* ── HERO ── */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  padding: 2rem;
-  background: radial-gradient(ellipse at 20% 50%, #1a0533 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 20%, #0a1a3a 0%, transparent 60%),
-              var(--bg);
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle, rgba(233,69,96,0.15) 1px, transparent 1px),
-    radial-gradient(circle, rgba(6,182,212,0.1) 1px, transparent 1px);
-  background-size: 60px 60px, 40px 40px;
-  background-position: 0 0, 30px 30px;
-  animation: gridMove 20s linear infinite;
-}
-
-@keyframes gridMove {
-  0% { background-position: 0 0, 30px 30px; }
-  100% { background-position: 60px 60px, 90px 90px; }
-}
-
-.floating-icons {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.float-icon {
-  position: absolute;
-  font-size: 2.5rem;
-  animation: float 6s ease-in-out infinite;
-  opacity: 0.3;
-}
-.float-icon:nth-child(1) { top: 10%; left: 5%;  animation-delay: 0s; }
-.float-icon:nth-child(2) { top: 20%; right: 8%; animation-delay: 1s; }
-.float-icon:nth-child(3) { top: 70%; left: 3%;  animation-delay: 2s; }
-.float-icon:nth-child(4) { top: 80%; right: 5%; animation-delay: 0.5s; }
-.float-icon:nth-child(5) { top: 40%; left: 2%;  animation-delay: 3s; }
-.float-icon:nth-child(6) { top: 55%; right: 3%; animation-delay: 1.5s; }
-
-@keyframes float {
-  0%,100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-}
-
-.hero-badge {
-  background: linear-gradient(135deg, var(--accent1), var(--accent3));
-  color: white;
-  padding: 0.4rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-  animation: fadeDown 0.6s ease both;
-}
-
-.hero h1 {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 1.1;
-  background: linear-gradient(135deg, #fff 0%, var(--blue) 50%, var(--green) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1rem;
-  animation: fadeDown 0.6s 0.1s ease both;
-}
-
-.hero p {
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: var(--muted);
-  max-width: 600px;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-  animation: fadeDown 0.6s 0.2s ease both;
-}
-
-.hero-start {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, var(--accent1), #ff6b9d);
-  color: white;
-  padding: 1rem 2.5rem;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 800;
-  text-decoration: none;
-  transition: all 0.3s;
-  box-shadow: 0 8px 32px rgba(233,69,96,0.4);
-  animation: fadeDown 0.6s 0.3s ease both;
-}
-.hero-start:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(233,69,96,0.6); }
-
-.scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  animation: bounce 2s infinite;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
-
-@keyframes fadeDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ── NAV ── */
-.sidebar {
-  position: fixed;
-  left: 0; top: 0; bottom: 0;
-  width: 260px;
-  background: rgba(22,33,62,0.95);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,255,255,0.07);
-  padding: 1.5rem 1rem;
-  z-index: 100;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-}
-.sidebar.open { transform: translateX(0); }
-
-.sidebar-logo {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.4rem;
-  color: var(--accent1);
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-
-.sidebar a {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 10px;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s;
-  margin-bottom: 0.2rem;
-}
-.sidebar a:hover, .sidebar a.active {
-  background: rgba(233,69,96,0.15);
-  color: var(--accent1);
-}
-
-.sidebar-num {
-  width: 24px; height: 24px;
-  background: rgba(233,69,96,0.2);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--accent1);
-  flex-shrink: 0;
-}
-
-.menu-btn {
-  position: fixed;
-  top: 1rem; left: 1rem;
-  z-index: 200;
-  background: var(--accent1);
-  border: none;
-  color: white;
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(233,69,96,0.4);
-  transition: all 0.2s;
-}
-.menu-btn:hover { transform: scale(1.1); }
-
-/* ── PROGRESS BAR ── */
-.progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent1), var(--blue), var(--green));
-  z-index: 300;
-  transition: width 0.1s;
-}
-
-/* ── MAIN ── */
-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem 6rem;
-}
-
-/* ── QUESTION CARD ── */
-.question-card {
-  background: var(--card);
-  border-radius: 24px;
-  padding: 0;
-  margin-bottom: 3rem;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  transform: translateY(30px);
-  opacity: 0;
-  transition: transform 0.6s ease, opacity 0.6s ease;
-}
-.question-card.visible { transform: translateY(0); opacity: 1; }
-
-.card-header {
-  padding: 2rem 2.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-header::before {
-  content: '';
-  position: absolute;
-  top: -50%; right: -20%;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.04);
-}
-
-.q-number {
-  font-family: 'Fredoka One', cursive;
-  font-size: 5rem;
-  position: absolute;
-  right: 2rem; top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.1;
-  line-height: 1;
-}
-
-.q-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255,255,255,0.15);
-  color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 0.8rem;
-}
-
-.card-header h2 {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.8rem;
-  color: white;
-  line-height: 1.2;
-}
-
-/* header colors per question */
-.q1 .card-header { background: linear-gradient(135deg, #e94560, #c0392b); }
-.q2 .card-header { background: linear-gradient(135deg, #0f3460, #1a5276); }
-.q3 .card-header { background: linear-gradient(135deg, #533483, #7d3c98); }
-.q4 .card-header { background: linear-gradient(135deg, #e67e22, #d35400); }
-.q5 .card-header { background: linear-gradient(135deg, #1e8449, #27ae60); }
-.q6 .card-header { background: linear-gradient(135deg, #2471a3, #1abc9c); }
-.q7 .card-header { background: linear-gradient(135deg, #922b21, #e74c3c); }
-.q8 .card-header { background: linear-gradient(135deg, #1a5276, #8e44ad); }
-.q9 .card-header { background: linear-gradient(135deg, #1e8449, #f39c12); }
-.q10 .card-header { background: linear-gradient(135deg, #2c3e50, #3498db); }
-
-/* ── TABS ── */
-.tabs {
-  display: flex;
-  background: rgba(0,0,0,0.2);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 0.9rem;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-bottom: 3px solid transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-}
-.tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.tab-btn.active { color: white; border-bottom-color: currentColor; background: rgba(255,255,255,0.05); }
-.tab-btn.t-think.active { color: var(--yellow); }
-.tab-btn.t-steps.active { color: var(--green); }
-.tab-btn.t-code.active  { color: var(--blue); }
-
-/* ── TAB CONTENT ── */
-.tab-content { display: none; padding: 2rem 2.5rem; }
-.tab-content.active { display: block; }
-
-/* ── THINKING SECTION ── */
-.think-box {
-  background: rgba(255,209,102,0.07);
-  border: 1px solid rgba(255,209,102,0.2);
-  border-radius: 16px;
-  padding: 1.4rem 1.6rem;
-  margin-bottom: 1rem;
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  animation: slideIn 0.4s ease;
-}
-.think-icon { font-size: 1.8rem; flex-shrink: 0; }
-.think-text { font-size: 1rem; line-height: 1.7; color: var(--text); }
-.think-text strong { color: var(--yellow); }
-
-/* ── STEPS SECTION ── */
-.steps-list { counter-reset: step; }
-
-.step-item {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  align-items: flex-start;
-  animation: slideIn 0.4s ease;
-}
-
-.step-num {
-  counter-increment: step;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--green), #00a67e);
-  color: #0f0f1a;
-  font-weight: 800;
-  font-size: 1rem;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0,217,163,0.3);
-}
-
-.step-body {
-  background: rgba(0,217,163,0.06);
-  border: 1px solid rgba(0,217,163,0.15);
-  border-radius: 14px;
-  padding: 0.9rem 1.2rem;
-  flex: 1;
-}
-.step-body .step-title {
-  font-weight: 800;
-  color: var(--green);
-  font-size: 0.95rem;
-  margin-bottom: 0.3rem;
-}
-.step-body p { font-size: 0.92rem; line-height: 1.65; color: var(--text); }
-.step-body p strong { color: var(--yellow); }
-.step-body p em { color: var(--blue); font-style: normal; font-weight: 700; }
-
-/* ── CODE SECTION ── */
-.code-wrap {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.07);
-}
-
-.code-bar {
-  background: #161b22;
-  padding: 0.7rem 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.code-dots { display: flex; gap: 6px; }
-.code-dots span {
-  width: 12px; height: 12px;
-  border-radius: 50%;
-}
-.code-dots span:nth-child(1) { background: #ff5f56; }
-.code-dots span:nth-child(2) { background: #febc2e; }
-.code-dots span:nth-child(3) { background: #28c840; }
-
-.code-lang {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.copy-btn {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--muted);
-  padding: 0.3rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  cursor: pointer;
-  font-family: 'Nunito', sans-serif;
-  transition: all 0.2s;
-}
-.copy-btn:hover { background: rgba(255,255,255,0.15); color: white; }
-.copy-btn.copied { background: rgba(0,217,163,0.2); color: var(--green); border-color: var(--green); }
-
-pre {
-  background: var(--code-bg);
-  padding: 1.5rem;
-  overflow-x: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  line-height: 1.7;
-}
-
-/* syntax highlight via spans */
-.kw  { color: #ff79c6; font-weight: 700; }  /* keyword */
-.ty  { color: #8be9fd; }                      /* type */
-.fn  { color: #50fa7b; }                      /* function */
-.str { color: #f1fa8c; }                      /* string */
-.num { color: #bd93f9; }                      /* number */
-.cm  { color: #6272a4; font-style: italic; }  /* comment */
-.op  { color: #ff79c6; }                      /* operator */
-
-/* ── IO BOX ── */
-.io-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-@media(max-width:600px){ .io-grid { grid-template-columns: 1fr; } }
-
-.io-box {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.07);
-}
-
-.io-header {
-  padding: 0.6rem 1rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  display: flex; align-items: center; gap: 0.4rem;
-}
-.io-in .io-header  { background: rgba(167,139,250,0.2); color: var(--purple); }
-.io-out .io-header { background: rgba(0,217,163,0.2);   color: var(--green); }
-
-.io-body {
-  background: rgba(0,0,0,0.3);
-  padding: 0.8rem 1rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  line-height: 1.7;
-  color: var(--text);
-}
-
-/* ── SLIDE IN ── */
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-10px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* ── SECTION TITLE ── */
-.section-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 2.5rem;
-  text-align: center;
-  margin: 4rem 0 2.5rem;
-  color: var(--text);
-}
-.section-title span { color: var(--accent1); }
-
-/* ── FOOTER ── */
-footer {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-footer span { color: var(--accent1); }
-
-/* ── OVERLAY ── */
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 90;
-  backdrop-filter: blur(4px);
-}
-.overlay.open { display: block; }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(233,69,96,0.4); border-radius: 3px; }
-
-/* ── CONCEPT CHIPS ── */
-.chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; }
-.chip {
-  padding: 0.2rem 0.7rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-.chip-v { background: rgba(167,139,250,0.2); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
-.chip-m { background: rgba(6,182,212,0.2);   color: var(--blue);   border: 1px solid rgba(6,182,212,0.3); }
-.chip-f { background: rgba(0,217,163,0.2);   color: var(--green);  border: 1px solid rgba(0,217,163,0.3); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java na Prática — Vetores, Matrizes e Funções</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
 
-<div class="progress-bar" id="progress"></div>
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <div class="progress-bar" id="progress"></div>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">☕ Java na Prática</div>
-  <a href="#q1"><span class="sidebar-num">1</span> Playlist de Música</a>
-  <a href="#q2"><span class="sidebar-num">2</span> Notas da Turma</a>
-  <a href="#q3"><span class="sidebar-num">3</span> Jogo da Velha</a>
-  <a href="#q4"><span class="sidebar-num">4</span> Ranking de Pontuação</a>
-  <a href="#q5"><span class="sidebar-num">5</span> Agenda Semanal</a>
-  <a href="#q6"><span class="sidebar-num">6</span> Temperaturas</a>
-  <a href="#q7"><span class="sidebar-num">7</span> Loja de Produtos</a>
-  <a href="#q8"><span class="sidebar-num">8</span> Inverter Lista</a>
-  <a href="#q9"><span class="sidebar-num">9</span> Mapa do Tesouro</a>
-  <a href="#q10"><span class="sidebar-num">10</span> Soma de Linhas</a>
-</nav>
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">☕ Java na Prática</div>
+    <a href="#q1"><span class="sidebar-num">1</span> Playlist de Música</a>
+    <a href="#q2"><span class="sidebar-num">2</span> Notas da Turma</a>
+    <a href="#q3"><span class="sidebar-num">3</span> Jogo da Velha</a>
+    <a href="#q4"><span class="sidebar-num">4</span> Ranking de Pontuação</a>
+    <a href="#q5"><span class="sidebar-num">5</span> Agenda Semanal</a>
+    <a href="#q6"><span class="sidebar-num">6</span> Temperaturas</a>
+    <a href="#q7"><span class="sidebar-num">7</span> Loja de Produtos</a>
+    <a href="#q8"><span class="sidebar-num">8</span> Inverter Lista</a>
+    <a href="#q9"><span class="sidebar-num">9</span> Mapa do Tesouro</a>
+    <a href="#q10"><span class="sidebar-num">10</span> Soma de Linhas</a>
+  </nav>
 
-<!-- HERO -->
-<section class="hero" id="topo">
-  <div class="floating-icons">
-    <span class="float-icon">☕</span>
-    <span class="float-icon">🎮</span>
-    <span class="float-icon">🎵</span>
-    <span class="float-icon">🏆</span>
-    <span class="float-icon">📋</span>
-    <span class="float-icon">🗺️</span>
-  </div>
-  <div class="hero-badge">☕ Ensino Médio · Informática</div>
-  <h1>Java na Prática</h1>
-  <p>Aprenda Vetores, Matrizes e Funções de um jeito divertido — com 10 exercícios explicados passo a passo, do zero!</p>
-  <a href="#q1" class="hero-start">Começar agora 🚀</a>
-  <div class="scroll-hint">↓ role para baixo</div>
-</section>
-
-<main id="main-content">
-  <h2 class="section-title">Os <span>10 Exercícios</span></h2>
-
-  <!-- ═══════════════════════════════════════════════════════ Q1 -->
-  <div class="question-card q1" id="q1">
-    <div class="card-header">
-      <span class="q-number">1</span>
-      <div class="q-badge">🎵 Questão 1</div>
-      <h2>Playlist de Música</h2>
-      <div class="chips">
-        <span class="chip chip-v">Vetor</span>
-        <span class="chip chip-f">Função</span>
-      </div>
+  <!-- HERO -->
+  <section class="hero" id="topo">
+    <div class="floating-icons">
+      <span class="float-icon">☕</span>
+      <span class="float-icon">🎮</span>
+      <span class="float-icon">🎵</span>
+      <span class="float-icon">🏆</span>
+      <span class="float-icon">📋</span>
+      <span class="float-icon">🗺️</span>
     </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q1')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q1')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q1')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q1">
-      <div class="think-box"><span class="think-icon">🎸</span><div class="think-text">Imagine que você tem uma <strong>prateleira com 10 CDs</strong>, cada um em um lugar numerado: o CD número 1 fica na posição 1, o CD 2 na posição 2, e por aí vai. No Java, essa prateleira se chama <strong>vetor</strong> (ou array)!</div></div>
-      <div class="think-box"><span class="think-icon">👆</span><div class="think-text">O usuário vai falar um número — tipo "quero ver o CD da posição 3" — e o programa vai até aquela posição e mostra o nome da música. Isso vai dentro de uma <strong>função</strong>, que é como um assistente especializado que faz uma tarefa específica.</div></div>
-      <div class="think-box"><span class="think-icon">⚠️</span><div class="think-text"><strong>Atenção importante:</strong> no Java, as posições do vetor começam em <strong>0</strong>, não em 1! Então quando o usuário digitar "3", você precisa buscar a posição 2 no vetor. É só fazer: posição do vetor = número do usuário - 1.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q1">
-      <div class="steps-list">
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-body">
-            <div class="step-title">Criar a "prateleira" de músicas</div>
-            <p>Criamos um vetor do tipo <em>String</em> com 10 posições e já colocamos o nome de 10 músicas dentro. É como preencher a prateleira com os CDs antes de abrir a loja.</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-body">
-            <div class="step-title">Mostrar todas as músicas na tela</div>
-            <p>Usamos um laço <em>for</em> para percorrer o vetor do início ao fim e mostrar cada música com seu número. O laço é como um robozinho que visita cada posição da prateleira.</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-body">
-            <div class="step-title">Perguntar ao usuário qual ele quer ver</div>
-            <p>Pedimos para o usuário digitar um número de 1 a 10. Usamos o <em>Scanner</em> para capturar essa resposta — o Scanner é como um microfone que recebe o que o usuário digita.</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">4</div>
-          <div class="step-body">
-            <div class="step-title">Criar a função buscarMusica()</div>
-            <p>Essa função recebe a prateleira (vetor) e o número escolhido. Ela <strong>subtrai 1 do número</strong> para achar a posição certa e devolve o nome da música. É como um funcionário da loja que vai buscar o CD para você!</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">5</div>
-          <div class="step-body">
-            <div class="step-title">Verificar se o número é válido e mostrar o resultado</div>
-            <p>Antes de buscar, checamos se o número está entre 1 e 10. Se estiver, chamamos a função e mostramos a música. Se não estiver, avisamos que é inválido. Nunca confie que o usuário vai digitar certo! 😄</p>
-          </div>
+    <div class="hero-badge">☕ Ensino Médio · Informática</div>
+    <h1>Java na Prática</h1>
+    <p>Aprenda Vetores, Matrizes e Funções de um jeito divertido — com 10 exercícios explicados passo a passo, do zero!
+    </p>
+    <a href="#q1" class="hero-start">Começar agora 🚀</a>
+    <div class="scroll-hint">↓ role para baixo</div>
+  </section>
+
+  <main id="main-content">
+    <h2 class="section-title">Os <span>10 Exercícios</span></h2>
+
+    <!-- ═══════════════════════════════════════════════════════ Q1 -->
+    <div class="question-card q1" id="q1">
+      <div class="card-header">
+        <span class="q-number">1</span>
+        <div class="q-badge">🎵 Questão 1</div>
+        <h2>Playlist de Música</h2>
+        <div class="chips">
+          <span class="chip chip-v">Vetor</span>
+          <span class="chip chip-f">Função</span>
         </div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q1">
-      <div class="code-wrap">
-        <div class="code-bar">
-          <div class="code-dots"><span></span><span></span><span></span></div>
-          <span class="code-lang">Playlist.java</span>
-          <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q1')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q1')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q1')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q1">
+        <div class="think-box"><span class="think-icon">🎸</span>
+          <div class="think-text">Imagine que você tem uma <strong>prateleira com 10 CDs</strong>, cada um em um lugar
+            numerado: o CD número 1 fica na posição 1, o CD 2 na posição 2, e por aí vai. No Java, essa prateleira se
+            chama <strong>vetor</strong> (ou array)!</div>
         </div>
-        <pre id="code-q1"><span class="kw">import</span> java.util.Scanner;
+        <div class="think-box"><span class="think-icon">👆</span>
+          <div class="think-text">O usuário vai falar um número — tipo "quero ver o CD da posição 3" — e o programa vai
+            até aquela posição e mostra o nome da música. Isso vai dentro de uma <strong>função</strong>, que é como um
+            assistente especializado que faz uma tarefa específica.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">⚠️</span>
+          <div class="think-text"><strong>Atenção importante:</strong> no Java, as posições do vetor começam em
+            <strong>0</strong>, não em 1! Então quando o usuário digitar "3", você precisa buscar a posição 2 no vetor.
+            É só fazer: posição do vetor = número do usuário - 1.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q1">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar a "prateleira" de músicas</div>
+              <p>Criamos um vetor do tipo <em>String</em> com 10 posições e já colocamos o nome de 10 músicas dentro. É
+                como preencher a prateleira com os CDs antes de abrir a loja.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Mostrar todas as músicas na tela</div>
+              <p>Usamos um laço <em>for</em> para percorrer o vetor do início ao fim e mostrar cada música com seu
+                número. O laço é como um robozinho que visita cada posição da prateleira.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Perguntar ao usuário qual ele quer ver</div>
+              <p>Pedimos para o usuário digitar um número de 1 a 10. Usamos o <em>Scanner</em> para capturar essa
+                resposta — o Scanner é como um microfone que recebe o que o usuário digita.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função buscarMusica()</div>
+              <p>Essa função recebe a prateleira (vetor) e o número escolhido. Ela <strong>subtrai 1 do número</strong>
+                para achar a posição certa e devolve o nome da música. É como um funcionário da loja que vai buscar o CD
+                para você!</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="step-title">Verificar se o número é válido e mostrar o resultado</div>
+              <p>Antes de buscar, checamos se o número está entre 1 e 10. Se estiver, chamamos a função e mostramos a
+                música. Se não estiver, avisamos que é inválido. Nunca confie que o usuário vai digitar certo! 😄</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q1">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">Playlist.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+          </div>
+          <pre id="code-q1"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">Playlist</span> {
 
@@ -708,53 +180,97 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in">
-          <div class="io-header">📥 Entrada do usuário</div>
-          <div class="io-body">Digite o número da música (1 a 10): <strong>3</strong></div>
         </div>
-        <div class="io-box io-out">
-          <div class="io-header">📤 Saída do programa</div>
-          <div class="io-body">Música escolhida: Hotel California</div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada do usuário</div>
+            <div class="io-body">Digite o número da música (1 a 10): <strong>3</strong></div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída do programa</div>
+            <div class="io-body">Música escolhida: Hotel California</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q2 -->
-  <div class="question-card q2" id="q2">
-    <div class="card-header">
-      <span class="q-number">2</span>
-      <div class="q-badge">📊 Questão 2</div>
-      <h2>Notas da Turma</h2>
-      <div class="chips">
-        <span class="chip chip-m">Matriz</span>
-        <span class="chip chip-f">Função</span>
+    <!-- ═══════════════════════════════════════════════════════ Q2 -->
+    <div class="question-card q2" id="q2">
+      <div class="card-header">
+        <span class="q-number">2</span>
+        <div class="q-badge">📊 Questão 2</div>
+        <h2>Notas da Turma</h2>
+        <div class="chips">
+          <span class="chip chip-m">Matriz</span>
+          <span class="chip chip-f">Função</span>
+        </div>
       </div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q2')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q2')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q2')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q2">
-      <div class="think-box"><span class="think-icon">📋</span><div class="think-text">Imagine uma <strong>folha de papel quadriculada</strong>: cada <strong>linha</strong> representa um aluno diferente, e cada <strong>coluna</strong> representa uma prova diferente. Isso é exatamente o que chamamos de <strong>matriz</strong> no Java — um vetor dentro de outro vetor!</div></div>
-      <div class="think-box"><span class="think-icon">🧮</span><div class="think-text">Para calcular a média de cada aluno, pegamos todas as notas da <strong>linha daquele aluno</strong>, somamos e dividimos pelo número de provas. É igual ao que você faz na mão: some tudo e divida pela quantidade!</div></div>
-      <div class="think-box"><span class="think-icon">🔄</span><div class="think-text">Vamos usar <strong>dois laços for</strong> um dentro do outro: o de fora passeia pelas linhas (pelos alunos) e o de dentro passeia pelas colunas (pelas provas). É como uma varredura — linha por linha, coluna por coluna.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q2">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar a "tabela" de notas (matriz)</div><p>Declaramos <em>double[5][3]</em> — isso cria 5 linhas (alunos) e 3 colunas (provas). É como desenhar uma tabela em branco no papel antes de preencher.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Preencher a tabela com dois laços for</div><p>O laço <em>de fora</em> conta os alunos (0, 1, 2, 3, 4). Para <strong>cada aluno</strong>, o laço <em>de dentro</em> pede as notas das 3 provas. É como preencher a tabela célula por célula.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Criar a função calcularMedia()</div><p>Essa função recebe um vetor de notas (uma linha da tabela) e retorna a média. Ela soma todos os valores e divide pelo tamanho do vetor. <strong>Reutilizamos ela para cada aluno!</strong></p></div></div>
-        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Chamar a função e mostrar cada média</div><p>Para cada aluno, passamos a linha dele para a função e mostramos o resultado. <em>notas[i]</em> é a linha inteira do aluno i — o Java entende isso automaticamente!</p></div></div>
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q2')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q2')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q2')">💻 Código</button>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q2">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">NotasTurma.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q2"><span class="kw">import</span> java.util.Scanner;
+      <div class="tab-content think active" data-card="q2">
+        <div class="think-box"><span class="think-icon">📋</span>
+          <div class="think-text">Imagine uma <strong>folha de papel quadriculada</strong>: cada <strong>linha</strong>
+            representa um aluno diferente, e cada <strong>coluna</strong> representa uma prova diferente. Isso é
+            exatamente o que chamamos de <strong>matriz</strong> no Java — um vetor dentro de outro vetor!</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🧮</span>
+          <div class="think-text">Para calcular a média de cada aluno, pegamos todas as notas da <strong>linha daquele
+              aluno</strong>, somamos e dividimos pelo número de provas. É igual ao que você faz na mão: some tudo e
+            divida pela quantidade!</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🔄</span>
+          <div class="think-text">Vamos usar <strong>dois laços for</strong> um dentro do outro: o de fora passeia pelas
+            linhas (pelos alunos) e o de dentro passeia pelas colunas (pelas provas). É como uma varredura — linha por
+            linha, coluna por coluna.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q2">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar a "tabela" de notas (matriz)</div>
+              <p>Declaramos <em>double[5][3]</em> — isso cria 5 linhas (alunos) e 3 colunas (provas). É como desenhar
+                uma tabela em branco no papel antes de preencher.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Preencher a tabela com dois laços for</div>
+              <p>O laço <em>de fora</em> conta os alunos (0, 1, 2, 3, 4). Para <strong>cada aluno</strong>, o laço
+                <em>de dentro</em> pede as notas das 3 provas. É como preencher a tabela célula por célula.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função calcularMedia()</div>
+              <p>Essa função recebe um vetor de notas (uma linha da tabela) e retorna a média. Ela soma todos os valores
+                e divide pelo tamanho do vetor. <strong>Reutilizamos ela para cada aluno!</strong></p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Chamar a função e mostrar cada média</div>
+              <p>Para cada aluno, passamos a linha dele para a função e mostramos o resultado. <em>notas[i]</em> é a
+                linha inteira do aluno i — o Java entende isso automaticamente!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q2">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">NotasTurma.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q2"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">NotasTurma</span> {
 
@@ -798,44 +314,94 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">Aluno 1: 7.0 / 8.0 / 9.0<br>Aluno 2: 5.0 / 6.0 / 7.0</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Aluno 1: 8.0<br>Aluno 2: 6.0</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">Aluno 1: 7.0 / 8.0 / 9.0<br>Aluno 2: 5.0 / 6.0 / 7.0</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Aluno 1: 8.0<br>Aluno 2: 6.0</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q3 -->
-  <div class="question-card q3" id="q3">
-    <div class="card-header">
-      <span class="q-number">3</span>
-      <div class="q-badge">🎮 Questão 3</div>
-      <h2>Jogo da Velha</h2>
-      <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q3')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q3')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q3')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q3">
-      <div class="think-box"><span class="think-icon">⬛</span><div class="think-text">O tabuleiro do jogo da velha tem <strong>3 linhas e 3 colunas</strong> — uma matriz 3x3 perfeita! Cada casinha pode ter 'X', 'O', ou estar vazia. No começo, todas estão vazias.</div></div>
-      <div class="think-box"><span class="think-icon">🔄</span><div class="think-text">O jogo alterna entre dois jogadores. Usamos um truque matemático simples: se o número da jogada for <strong>par</strong> → é o jogador X. Se for <strong>ímpar</strong> → é o jogador O. Isso funciona porque ímpar/par alterna sempre!</div></div>
-      <div class="think-box"><span class="think-icon">🏆</span><div class="think-text">Para verificar se alguém ganhou, precisamos checar <strong>8 combinações</strong>: 3 linhas + 3 colunas + 2 diagonais. Se todos os 3 valores de qualquer combinação forem iguais, esse jogador ganhou!</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q3">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar o tabuleiro vazio</div><p>Criamos uma matriz <em>char[3][3]</em> e preenchemos tudo com espaço (' '). O espaço representa uma casinha vazia — ainda não foi jogada.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função mostrarTabuleiro()</div><p>Essa função percorre a matriz e desenha o tabuleiro com as linhas divisórias (---|---|---). É o "desenhista" do jogo — ele mostra como o tabuleiro está a cada rodada.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Criar a função verificarVencedor()</div><p>Essa função checa as <strong>3 linhas, 3 colunas e 2 diagonais</strong>. Se os três valores de qualquer combinação forem do mesmo jogador, ela retorna <em>true</em> (verdadeiro) — esse jogador ganhou!</p></div></div>
-        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Criar o laço principal do jogo</div><p>Em um laço, alternamos entre X e O (usando o truque do par/ímpar), pedimos linha e coluna, colocamos a peça no tabuleiro, e verificamos se houve vencedor. O jogo termina com vitória ou após 9 jogadas (empate).</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q3 -->
+    <div class="question-card q3" id="q3">
+      <div class="card-header">
+        <span class="q-number">3</span>
+        <div class="q-badge">🎮 Questão 3</div>
+        <h2>Jogo da Velha</h2>
+        <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q3">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">JogoDaVelha.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q3"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q3')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q3')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q3')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q3">
+        <div class="think-box"><span class="think-icon">⬛</span>
+          <div class="think-text">O tabuleiro do jogo da velha tem <strong>3 linhas e 3 colunas</strong> — uma matriz
+            3x3 perfeita! Cada casinha pode ter 'X', 'O', ou estar vazia. No começo, todas estão vazias.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🔄</span>
+          <div class="think-text">O jogo alterna entre dois jogadores. Usamos um truque matemático simples: se o número
+            da jogada for <strong>par</strong> → é o jogador X. Se for <strong>ímpar</strong> → é o jogador O. Isso
+            funciona porque ímpar/par alterna sempre!</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🏆</span>
+          <div class="think-text">Para verificar se alguém ganhou, precisamos checar <strong>8 combinações</strong>: 3
+            linhas + 3 colunas + 2 diagonais. Se todos os 3 valores de qualquer combinação forem iguais, esse jogador
+            ganhou!</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q3">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar o tabuleiro vazio</div>
+              <p>Criamos uma matriz <em>char[3][3]</em> e preenchemos tudo com espaço (' '). O espaço representa uma
+                casinha vazia — ainda não foi jogada.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função mostrarTabuleiro()</div>
+              <p>Essa função percorre a matriz e desenha o tabuleiro com as linhas divisórias (---|---|---). É o
+                "desenhista" do jogo — ele mostra como o tabuleiro está a cada rodada.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função verificarVencedor()</div>
+              <p>Essa função checa as <strong>3 linhas, 3 colunas e 2 diagonais</strong>. Se os três valores de qualquer
+                combinação forem do mesmo jogador, ela retorna <em>true</em> (verdadeiro) — esse jogador ganhou!</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Criar o laço principal do jogo</div>
+              <p>Em um laço, alternamos entre X e O (usando o truque do par/ímpar), pedimos linha e coluna, colocamos a
+                peça no tabuleiro, e verificamos se houve vencedor. O jogo termina com vitória ou após 9 jogadas
+                (empate).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q3">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">JogoDaVelha.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q3"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">JogoDaVelha</span> {
 
@@ -909,42 +475,81 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Jogada</div><div class="io-body">X: linha 1, col 1<br>O: linha 2, col 2<br>X: linha 1, col 2<br>...</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Resultado</div><div class="io-body"> X | X | X<br>---|---|---<br>   | O |  <br>Jogador X VENCEU! 🎉</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Jogada</div>
+            <div class="io-body">X: linha 1, col 1<br>O: linha 2, col 2<br>X: linha 1, col 2<br>...</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Resultado</div>
+            <div class="io-body"> X | X | X<br>---|---|---<br> | O | <br>Jogador X VENCEU! 🎉</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q4 -->
-  <div class="question-card q4" id="q4">
-    <div class="card-header">
-      <span class="q-number">4</span>
-      <div class="q-badge">🏆 Questão 4</div>
-      <h2>Ranking de Pontuação</h2>
-      <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q4')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q4')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q4')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q4">
-      <div class="think-box"><span class="think-icon">🥇</span><div class="think-text">Pense numa <strong>competição entre 8 jogadores</strong>. Para achar quem tem mais pontos, você olharia para o primeiro, depois para o segundo — se o segundo tiver mais, ele passa a ser o "campeão provisório". Você continua até o final. <strong>É exatamente isso que o computador vai fazer!</strong></div></div>
-      <div class="think-box"><span class="think-icon">📍</span><div class="think-text">A função vai guardar o <strong>índice</strong> (a posição) do maior valor, não o valor em si. Assim, no final sabemos tanto a posição quanto o valor: <em>pontuacoes[indiceMaior]</em>.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q4">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar o vetor de pontuações</div><p>Declaramos <em>int[8]</em> para guardar as pontuações dos 8 jogadores. Então usamos um laço para perguntar a pontuação de cada um.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função encontrarMaior()</div><p>Começamos assumindo que o jogador 0 é o maior (índice 0). Aí percorremos do índice 1 até o 7. Se encontrarmos alguém com mais pontos, <strong>atualizamos quem é o campeão</strong>. No final, retornamos o índice do vencedor.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Mostrar o ranking e o vencedor</div><p>Exibimos todos os jogadores com suas pontuações e depois anunciamos o vencedor usando o índice retornado pela função. Lembrando que índice + 1 = número do jogador para o usuário!</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q4 -->
+    <div class="question-card q4" id="q4">
+      <div class="card-header">
+        <span class="q-number">4</span>
+        <div class="q-badge">🏆 Questão 4</div>
+        <h2>Ranking de Pontuação</h2>
+        <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q4">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">Ranking.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q4"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q4')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q4')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q4')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q4">
+        <div class="think-box"><span class="think-icon">🥇</span>
+          <div class="think-text">Pense numa <strong>competição entre 8 jogadores</strong>. Para achar quem tem mais
+            pontos, você olharia para o primeiro, depois para o segundo — se o segundo tiver mais, ele passa a ser o
+            "campeão provisório". Você continua até o final. <strong>É exatamente isso que o computador vai
+              fazer!</strong></div>
+        </div>
+        <div class="think-box"><span class="think-icon">📍</span>
+          <div class="think-text">A função vai guardar o <strong>índice</strong> (a posição) do maior valor, não o valor
+            em si. Assim, no final sabemos tanto a posição quanto o valor: <em>pontuacoes[indiceMaior]</em>.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q4">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar o vetor de pontuações</div>
+              <p>Declaramos <em>int[8]</em> para guardar as pontuações dos 8 jogadores. Então usamos um laço para
+                perguntar a pontuação de cada um.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função encontrarMaior()</div>
+              <p>Começamos assumindo que o jogador 0 é o maior (índice 0). Aí percorremos do índice 1 até o 7. Se
+                encontrarmos alguém com mais pontos, <strong>atualizamos quem é o campeão</strong>. No final, retornamos
+                o índice do vencedor.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Mostrar o ranking e o vencedor</div>
+              <p>Exibimos todos os jogadores com suas pontuações e depois anunciamos o vencedor usando o índice
+                retornado pela função. Lembrando que índice + 1 = número do jogador para o usuário!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q4">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">Ranking.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+          </div>
+          <pre id="code-q4"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">Ranking</span> {
 
@@ -986,43 +591,88 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">150, 320, 210, 480,<br>390, 100, 275, 440</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">🏆 Vencedor: Jogador 4<br>com 480 pontos!</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">150, 320, 210, 480,<br>390, 100, 275, 440</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">🏆 Vencedor: Jogador 4<br>com 480 pontos!</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q5 -->
-  <div class="question-card q5" id="q5">
-    <div class="card-header">
-      <span class="q-number">5</span>
-      <div class="q-badge">📅 Questão 5</div>
-      <h2>Agenda Semanal</h2>
-      <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q5')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q5')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q5')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q5">
-      <div class="think-box"><span class="think-icon">📆</span><div class="think-text">Uma agenda tem <strong>7 dias</strong> (linhas) e <strong>3 horários</strong> por dia — manhã, tarde e noite (colunas). Isso forma uma matriz 7x3. Cada célula guarda o nome de um compromisso, ou "Livre" se não tem nada.</div></div>
-      <div class="think-box"><span class="think-icon">✏️</span><div class="think-text">O usuário vai escolher o dia e o horário e digitar o compromisso. Isso vai atualizar a célula certa da matriz. É como riscar uma anotação numa agenda de papel!</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q5">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar a matriz e preencher com "Livre"</div><p>Criamos <em>String[7][3]</em> e usamos dois laços para colocar "Livre" em todas as posições. É como comprar uma agenda nova — todas as páginas estão em branco!</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função exibirAgenda()</div><p>Essa função mostra a agenda como uma tabela organizada, com os nomes dos dias e horários. Usamos <em>printf</em> para alinhar direitinho as colunas.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Criar a função marcarCompromisso()</div><p>Recebe o dia, o horário e o nome do evento, e atualiza a célula certa da matriz. Simples assim: <em>agenda[dia][hora] = evento</em>.</p></div></div>
-        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Criar um menu de opções</div><p>Usamos um laço <em>do-while</em> para mostrar as opções (marcar compromisso, ver agenda, sair). O programa continua rodando até o usuário escolher sair.</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q5 -->
+    <div class="question-card q5" id="q5">
+      <div class="card-header">
+        <span class="q-number">5</span>
+        <div class="q-badge">📅 Questão 5</div>
+        <h2>Agenda Semanal</h2>
+        <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q5">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">AgendaSemanal.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q5"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q5')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q5')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q5')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q5">
+        <div class="think-box"><span class="think-icon">📆</span>
+          <div class="think-text">Uma agenda tem <strong>7 dias</strong> (linhas) e <strong>3 horários</strong> por dia
+            — manhã, tarde e noite (colunas). Isso forma uma matriz 7x3. Cada célula guarda o nome de um compromisso, ou
+            "Livre" se não tem nada.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">✏️</span>
+          <div class="think-text">O usuário vai escolher o dia e o horário e digitar o compromisso. Isso vai atualizar a
+            célula certa da matriz. É como riscar uma anotação numa agenda de papel!</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q5">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar a matriz e preencher com "Livre"</div>
+              <p>Criamos <em>String[7][3]</em> e usamos dois laços para colocar "Livre" em todas as posições. É como
+                comprar uma agenda nova — todas as páginas estão em branco!</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função exibirAgenda()</div>
+              <p>Essa função mostra a agenda como uma tabela organizada, com os nomes dos dias e horários. Usamos
+                <em>printf</em> para alinhar direitinho as colunas.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função marcarCompromisso()</div>
+              <p>Recebe o dia, o horário e o nome do evento, e atualiza a célula certa da matriz. Simples assim:
+                <em>agenda[dia][hora] = evento</em>.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Criar um menu de opções</div>
+              <p>Usamos um laço <em>do-while</em> para mostrar as opções (marcar compromisso, ver agenda, sair). O
+                programa continua rodando até o usuário escolher sair.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q5">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">AgendaSemanal.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q5"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">AgendaSemanal</span> {
 
@@ -1080,43 +730,88 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">Opção: 1<br>Dia: 1 (Seg), Horário: 1 (Manhã)<br>Evento: Reunião</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Seg  | Reunião        | Livre | Livre<br>✅ Compromisso marcado!</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">Opção: 1<br>Dia: 1 (Seg), Horário: 1 (Manhã)<br>Evento: Reunião</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Seg | Reunião | Livre | Livre<br>✅ Compromisso marcado!</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q6 -->
-  <div class="question-card q6" id="q6">
-    <div class="card-header">
-      <span class="q-number">6</span>
-      <div class="q-badge">🌡️ Questão 6</div>
-      <h2>Temperaturas da Semana</h2>
-      <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q6')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q6')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q6')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q6">
-      <div class="think-box"><span class="think-icon">☀️</span><div class="think-text">Temos <strong>7 temperaturas</strong>, uma por dia — um vetor de 7 posições! Para calcular a média, é como você faria na escola: <strong>some todas e divida por 7</strong>.</div></div>
-      <div class="think-box"><span class="think-icon">🔥❄️</span><div class="think-text">Além da média, podemos achar o dia <strong>mais quente</strong> e o <strong>mais frio</strong> da semana usando a mesma lógica do exercício anterior: percorrer o vetor guardando o índice do maior e do menor valor.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q6">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar um vetor de 7 temperaturas</div><p>Declaramos <em>double[7]</em> e lemos a temperatura de cada dia. Usamos <em>double</em> porque temperatura pode ter vírgula (ex: 28,5°C).</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função calcularMedia()</div><p>Usamos o <em>for-each</em> para somar todos os valores. O for-each é uma versão simplificada do for que percorre todos os elementos automaticamente, sem precisar de índice.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Criar funções para o maior e menor</div><p>Seguindo a mesma lógica do ranking: começa pelo índice 0 e substitui sempre que encontrar um valor maior (ou menor). No final retorna o índice do dia mais quente (ou mais frio).</p></div></div>
-        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Mostrar os resultados formatados</div><p>Usamos <em>printf</em> com <strong>%.1f</strong> para mostrar apenas 1 casa decimal. O vetor <em>dias[]</em> nos ajuda a mostrar o nome do dia ao invés do número.</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q6 -->
+    <div class="question-card q6" id="q6">
+      <div class="card-header">
+        <span class="q-number">6</span>
+        <div class="q-badge">🌡️ Questão 6</div>
+        <h2>Temperaturas da Semana</h2>
+        <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q6">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">Temperaturas.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q6"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q6')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q6')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q6')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q6">
+        <div class="think-box"><span class="think-icon">☀️</span>
+          <div class="think-text">Temos <strong>7 temperaturas</strong>, uma por dia — um vetor de 7 posições! Para
+            calcular a média, é como você faria na escola: <strong>some todas e divida por 7</strong>.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🔥❄️</span>
+          <div class="think-text">Além da média, podemos achar o dia <strong>mais quente</strong> e o <strong>mais
+              frio</strong> da semana usando a mesma lógica do exercício anterior: percorrer o vetor guardando o índice
+            do maior e do menor valor.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q6">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar um vetor de 7 temperaturas</div>
+              <p>Declaramos <em>double[7]</em> e lemos a temperatura de cada dia. Usamos <em>double</em> porque
+                temperatura pode ter vírgula (ex: 28,5°C).</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função calcularMedia()</div>
+              <p>Usamos o <em>for-each</em> para somar todos os valores. O for-each é uma versão simplificada do for que
+                percorre todos os elementos automaticamente, sem precisar de índice.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Criar funções para o maior e menor</div>
+              <p>Seguindo a mesma lógica do ranking: começa pelo índice 0 e substitui sempre que encontrar um valor
+                maior (ou menor). No final retorna o índice do dia mais quente (ou mais frio).</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Mostrar os resultados formatados</div>
+              <p>Usamos <em>printf</em> com <strong>%.1f</strong> para mostrar apenas 1 casa decimal. O vetor
+                <em>dias[]</em> nos ajuda a mostrar o nome do dia ao invés do número.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q6">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">Temperaturas.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q6"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">Temperaturas</span> {
 
@@ -1165,42 +860,82 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">28.5, 30.0, 27.0, 32.5,<br>31.0, 26.5, 29.0</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Média: 29.2°C<br>Mais quente: Quinta (32.5°C)<br>Mais frio: Sábado (26.5°C)</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">28.5, 30.0, 27.0, 32.5,<br>31.0, 26.5, 29.0</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Média: 29.2°C<br>Mais quente: Quinta (32.5°C)<br>Mais frio: Sábado (26.5°C)</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q7 -->
-  <div class="question-card q7" id="q7">
-    <div class="card-header">
-      <span class="q-number">7</span>
-      <div class="q-badge">🛒 Questão 7</div>
-      <h2>Loja de Produtos</h2>
-      <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q7')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q7')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q7')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q7">
-      <div class="think-box"><span class="think-icon">🗂️</span><div class="think-text">Cada produto tem 3 informações: <strong>nome, preço e quantidade</strong>. Com 5 produtos, temos 5 linhas e 3 colunas — uma matriz! Como nome é texto e preço/quantidade são números, vamos guardar tudo como <strong>String</strong> e converter quando precisar calcular.</div></div>
-      <div class="think-box"><span class="think-icon">💰</span><div class="think-text">O valor total de um produto no estoque é simples: <strong>preço × quantidade</strong>. Para saber o total da loja inteira, somamos o valor de cada produto. A função vai percorrer a matriz, fazer a conta de cada linha e acumular o total.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q7">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar a matriz de produtos</div><p>Usamos <em>String[5][3]</em> onde cada linha tem: [nome, preço, quantidade]. Preenchemos diretamente no código — não precisa pedir para o usuário desta vez.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função calcularTotalEstoque()</div><p>Para cada produto (linha), <strong>convertemos</strong> o preço (String → double) e a quantidade (String → int) usando <em>Double.parseDouble()</em> e <em>Integer.parseInt()</em>. Multiplicamos e acumulamos.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Exibir a tabela e o total</div><p>Mostramos cada produto com seu subtotal (preço × qtd) e no final mostramos o total geral calculado pela função.</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q7 -->
+    <div class="question-card q7" id="q7">
+      <div class="card-header">
+        <span class="q-number">7</span>
+        <div class="q-badge">🛒 Questão 7</div>
+        <h2>Loja de Produtos</h2>
+        <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q7">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">LojaProdutos.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q7"><span class="kw">public class</span> <span class="ty">LojaProdutos</span> {
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q7')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q7')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q7')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q7">
+        <div class="think-box"><span class="think-icon">🗂️</span>
+          <div class="think-text">Cada produto tem 3 informações: <strong>nome, preço e quantidade</strong>. Com 5
+            produtos, temos 5 linhas e 3 colunas — uma matriz! Como nome é texto e preço/quantidade são números, vamos
+            guardar tudo como <strong>String</strong> e converter quando precisar calcular.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">💰</span>
+          <div class="think-text">O valor total de um produto no estoque é simples: <strong>preço × quantidade</strong>.
+            Para saber o total da loja inteira, somamos o valor de cada produto. A função vai percorrer a matriz, fazer
+            a conta de cada linha e acumular o total.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q7">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar a matriz de produtos</div>
+              <p>Usamos <em>String[5][3]</em> onde cada linha tem: [nome, preço, quantidade]. Preenchemos diretamente no
+                código — não precisa pedir para o usuário desta vez.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função calcularTotalEstoque()</div>
+              <p>Para cada produto (linha), <strong>convertemos</strong> o preço (String → double) e a quantidade
+                (String → int) usando <em>Double.parseDouble()</em> e <em>Integer.parseInt()</em>. Multiplicamos e
+                acumulamos.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Exibir a tabela e o total</div>
+              <p>Mostramos cada produto com seu subtotal (preço × qtd) e no final mostramos o total geral calculado pela
+                função.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q7">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">LojaProdutos.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q7"><span class="kw">public class</span> <span class="ty">LojaProdutos</span> {
 
     <span class="cm">// Função que calcula o valor total de todo o estoque</span>
     <span class="kw">static double</span> <span class="fn">calcularTotalEstoque</span>(<span class="ty">String</span>[][] produtos) {
@@ -1242,42 +977,81 @@ footer span { color: var(--accent1); }
             <span class="fn">calcularTotalEstoque</span>(produtos));
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Dados (no código)</div><div class="io-body">Teclado R$150 x10<br>Mouse R$80 x25<br>Monitor R$900 x5<br>...</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Teclado: R$1500.00<br>Mouse: R$2000.00<br>...<br>TOTAL: R$10150.00</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Dados (no código)</div>
+            <div class="io-body">Teclado R$150 x10<br>Mouse R$80 x25<br>Monitor R$900 x5<br>...</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Teclado: R$1500.00<br>Mouse: R$2000.00<br>...<br>TOTAL: R$10150.00</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q8 -->
-  <div class="question-card q8" id="q8">
-    <div class="card-header">
-      <span class="q-number">8</span>
-      <div class="q-badge">🔄 Questão 8</div>
-      <h2>Inverter Lista</h2>
-      <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q8')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q8')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q8')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q8">
-      <div class="think-box"><span class="think-icon">📚</span><div class="think-text">Imagine uma pilha de 5 livros numerados de 1 a 5. Para mostrar em ordem inversa, você pega o de cima primeiro (o 5), depois o 4, depois o 3... É isso que o computador vai fazer: <strong>percorrer o vetor de trás para frente</strong>!</div></div>
-      <div class="think-box"><span class="think-icon">🔢</span><div class="think-text">Se o vetor tem 5 posições, os índices são 0, 1, 2, 3, 4. Para inverter, começamos no índice 4 (o último) e vamos diminuindo até chegar no 0. O truque do índice final é: <strong>tamanho - 1</strong>.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q8">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar e preencher o vetor</div><p>Declaramos <em>int[5]</em> e pedimos 5 números ao usuário em um laço. Mostramos também a ordem original para comparar depois.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função imprimirInvertido()</div><p>O segredo está no laço for: em vez de começar em 0 e ir crescendo, começamos em <em>numeros.length - 1</em> (o último índice) e vamos <strong>diminuindo</strong> até chegar em 0.</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Chamar a função e mostrar o resultado</div><p>Chamamos a função e mostramos os números separados por vírgula. A lógica é igual ao original, mas agora o <em>i</em> começa no final e vai diminuindo: <em>i--</em> ao invés de <em>i++</em>.</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q8 -->
+    <div class="question-card q8" id="q8">
+      <div class="card-header">
+        <span class="q-number">8</span>
+        <div class="q-badge">🔄 Questão 8</div>
+        <h2>Inverter Lista</h2>
+        <div class="chips"><span class="chip chip-v">Vetor</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q8">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">InverterLista.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q8"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q8')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q8')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q8')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q8">
+        <div class="think-box"><span class="think-icon">📚</span>
+          <div class="think-text">Imagine uma pilha de 5 livros numerados de 1 a 5. Para mostrar em ordem inversa, você
+            pega o de cima primeiro (o 5), depois o 4, depois o 3... É isso que o computador vai fazer:
+            <strong>percorrer o vetor de trás para frente</strong>!</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🔢</span>
+          <div class="think-text">Se o vetor tem 5 posições, os índices são 0, 1, 2, 3, 4. Para inverter, começamos no
+            índice 4 (o último) e vamos diminuindo até chegar no 0. O truque do índice final é: <strong>tamanho -
+              1</strong>.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q8">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar e preencher o vetor</div>
+              <p>Declaramos <em>int[5]</em> e pedimos 5 números ao usuário em um laço. Mostramos também a ordem original
+                para comparar depois.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função imprimirInvertido()</div>
+              <p>O segredo está no laço for: em vez de começar em 0 e ir crescendo, começamos em <em>numeros.length -
+                  1</em> (o último índice) e vamos <strong>diminuindo</strong> até chegar em 0.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Chamar a função e mostrar o resultado</div>
+              <p>Chamamos a função e mostramos os números separados por vírgula. A lógica é igual ao original, mas agora
+                o <em>i</em> começa no final e vai diminuindo: <em>i--</em> ao invés de <em>i++</em>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q8">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">InverterLista.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q8"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">InverterLista</span> {
 
@@ -1316,44 +1090,93 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">10, 20, 30, 40, 50</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Original:  10, 20, 30, 40, 50<br>Invertido: 50, 40, 30, 20, 10</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">10, 20, 30, 40, 50</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Original: 10, 20, 30, 40, 50<br>Invertido: 50, 40, 30, 20, 10</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q9 -->
-  <div class="question-card q9" id="q9">
-    <div class="card-header">
-      <span class="q-number">9</span>
-      <div class="q-badge">🗺️ Questão 9</div>
-      <h2>Mapa do Tesouro</h2>
-      <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q9')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q9')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q9')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q9">
-      <div class="think-box"><span class="think-icon">🏝️</span><div class="think-text">Imagine um mapa quadriculado 5x5 — exatamente uma matriz! O computador vai <strong>esconder o tesouro</strong> num lugar aleatório (usando aleatoriedade do Java) e o usuário vai tentando adivinhar a posição.</div></div>
-      <div class="think-box"><span class="think-icon">🎲</span><div class="think-text"><em>Math.random()</em> gera um número entre 0 e 1 (como 0,7342...). Para transformar em um número inteiro de 0 a 4, multiplicamos por 5 e convertemos para inteiro: <em>(int)(Math.random() * 5)</em>. Simples!</div></div>
-      <div class="think-box"><span class="think-icon">🙈</span><div class="think-text">O mapa mostramos com <strong>~ (til)</strong> em todas as posições — mesmo onde está o tesouro! Só verificamos internamente se o usuário acertou. É como um jogo de campo minado.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q9">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar o mapa 5x5 preenchido com '~'</div><p>Declaramos <em>char[5][5]</em> e preenchemos tudo com til (~), que representa a água/terreno desconhecido.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Sortear a posição do tesouro</div><p>Usamos <em>Math.random()</em> para sortear linha e coluna entre 0 e 4. Colocamos 'T' nessa posição da matriz — mas o usuário não vai ver!</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Criar a função mostrarMapa()</div><p>Percorre a matriz e mostra '~' em todo lugar — <strong>inclusive onde está o 'T'</strong>. Isso esconde o tesouro. Quando o usuário erra, marcamos a posição com 'X'.</p></div></div>
-        <div class="step-item"><div class="step-num">4</div><div class="step-body"><div class="step-title">Dar 3 tentativas ao usuário</div><p>Em um laço de 3 rodadas, pedimos linha e coluna. Se acertar, fim de jogo! Se errar, marcamos 'X' naquele lugar e mostramos o mapa atualizado.</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q9 -->
+    <div class="question-card q9" id="q9">
+      <div class="card-header">
+        <span class="q-number">9</span>
+        <div class="q-badge">🗺️ Questão 9</div>
+        <h2>Mapa do Tesouro</h2>
+        <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q9">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">MapaTesouro.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q9"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q9')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q9')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q9')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q9">
+        <div class="think-box"><span class="think-icon">🏝️</span>
+          <div class="think-text">Imagine um mapa quadriculado 5x5 — exatamente uma matriz! O computador vai
+            <strong>esconder o tesouro</strong> num lugar aleatório (usando aleatoriedade do Java) e o usuário vai
+            tentando adivinhar a posição.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🎲</span>
+          <div class="think-text"><em>Math.random()</em> gera um número entre 0 e 1 (como 0,7342...). Para transformar
+            em um número inteiro de 0 a 4, multiplicamos por 5 e convertemos para inteiro: <em>(int)(Math.random() *
+              5)</em>. Simples!</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🙈</span>
+          <div class="think-text">O mapa mostramos com <strong>~ (til)</strong> em todas as posições — mesmo onde está o
+            tesouro! Só verificamos internamente se o usuário acertou. É como um jogo de campo minado.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q9">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar o mapa 5x5 preenchido com '~'</div>
+              <p>Declaramos <em>char[5][5]</em> e preenchemos tudo com til (~), que representa a água/terreno
+                desconhecido.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Sortear a posição do tesouro</div>
+              <p>Usamos <em>Math.random()</em> para sortear linha e coluna entre 0 e 4. Colocamos 'T' nessa posição da
+                matriz — mas o usuário não vai ver!</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função mostrarMapa()</div>
+              <p>Percorre a matriz e mostra '~' em todo lugar — <strong>inclusive onde está o 'T'</strong>. Isso esconde
+                o tesouro. Quando o usuário erra, marcamos a posição com 'X'.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Dar 3 tentativas ao usuário</div>
+              <p>Em um laço de 3 rodadas, pedimos linha e coluna. Se acertar, fim de jogo! Se errar, marcamos 'X'
+                naquele lugar e mostramos o mapa atualizado.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q9">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">MapaTesouro.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q9"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">MapaTesouro</span> {
 
@@ -1415,42 +1238,82 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Tentativa</div><div class="io-body">Linha: 3, Coluna: 4</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Resultado</div><div class="io-body">🎉 PARABÉNS! Você achou o tesouro!<br>(ou: ❌ Errou! — posição aleatória)</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Tentativa</div>
+            <div class="io-body">Linha: 3, Coluna: 4</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Resultado</div>
+            <div class="io-body">🎉 PARABÉNS! Você achou o tesouro!<br>(ou: ❌ Errou! — posição aleatória)</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════════════════ Q10 -->
-  <div class="question-card q10" id="q10">
-    <div class="card-header">
-      <span class="q-number">10</span>
-      <div class="q-badge">➕ Questão 10</div>
-      <h2>Soma de Linhas</h2>
-      <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn t-think active" onclick="switchTab(this,'think','q10')">🧠 Pensamento</button>
-      <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q10')">📋 Passo a Passo</button>
-      <button class="tab-btn t-code"  onclick="switchTab(this,'code','q10')">💻 Código</button>
-    </div>
-    <div class="tab-content think active" data-card="q10">
-      <div class="think-box"><span class="think-icon">🔢</span><div class="think-text">Uma matriz 3x3 tem 3 linhas. Para somar cada linha <strong>separadamente</strong>, precisamos somar só os elementos daquela linha — não misturar com as outras. É como somar os itens de cada prateleira independentemente.</div></div>
-      <div class="think-box"><span class="think-icon">🔁</span><div class="think-text">O laço <strong>externo</strong> visita cada linha (0, 1, 2). Para cada linha, reiniciamos o contador de soma do zero. O laço <strong>interno</strong> soma os 3 valores daquela linha. Quando termina, mostramos a soma antes de passar para a próxima linha.</div></div>
-    </div>
-    <div class="tab-content steps" data-card="q10">
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><div class="step-body"><div class="step-title">Criar e preencher a matriz 3x3</div><p>Declaramos <em>int[3][3]</em> e usamos dois laços aninhados para pedir os 9 valores ao usuário, posição por posição.</p></div></div>
-        <div class="step-item"><div class="step-num">2</div><div class="step-body"><div class="step-title">Criar a função somarLinha()</div><p>Recebe um vetor (uma linha da matriz) e retorna a soma de todos seus elementos com o for-each. Simples e reutilizável!</p></div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-body"><div class="step-title">Mostrar a matriz com as somas</div><p>Para cada linha, mostramos os valores entre colchetes e chamamos a função para calcular a soma. <em>matriz[i]</em> passa a linha i inteira para a função — o Java entende que uma linha da matriz é um vetor!</p></div></div>
+    <!-- ═══════════════════════════════════════════════════════ Q10 -->
+    <div class="question-card q10" id="q10">
+      <div class="card-header">
+        <span class="q-number">10</span>
+        <div class="q-badge">➕ Questão 10</div>
+        <h2>Soma de Linhas</h2>
+        <div class="chips"><span class="chip chip-m">Matriz</span><span class="chip chip-f">Função</span></div>
       </div>
-    </div>
-    <div class="tab-content code" data-card="q10">
-      <div class="code-wrap">
-        <div class="code-bar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">SomaLinhas.java</span><button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button></div>
-        <pre id="code-q10"><span class="kw">import</span> java.util.Scanner;
+      <div class="tabs">
+        <button class="tab-btn t-think active" onclick="switchTab(this,'think','q10')">🧠 Pensamento</button>
+        <button class="tab-btn t-steps" onclick="switchTab(this,'steps','q10')">📋 Passo a Passo</button>
+        <button class="tab-btn t-code" onclick="switchTab(this,'code','q10')">💻 Código</button>
+      </div>
+      <div class="tab-content think active" data-card="q10">
+        <div class="think-box"><span class="think-icon">🔢</span>
+          <div class="think-text">Uma matriz 3x3 tem 3 linhas. Para somar cada linha <strong>separadamente</strong>,
+            precisamos somar só os elementos daquela linha — não misturar com as outras. É como somar os itens de cada
+            prateleira independentemente.</div>
+        </div>
+        <div class="think-box"><span class="think-icon">🔁</span>
+          <div class="think-text">O laço <strong>externo</strong> visita cada linha (0, 1, 2). Para cada linha,
+            reiniciamos o contador de soma do zero. O laço <strong>interno</strong> soma os 3 valores daquela linha.
+            Quando termina, mostramos a soma antes de passar para a próxima linha.</div>
+        </div>
+      </div>
+      <div class="tab-content steps" data-card="q10">
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Criar e preencher a matriz 3x3</div>
+              <p>Declaramos <em>int[3][3]</em> e usamos dois laços aninhados para pedir os 9 valores ao usuário, posição
+                por posição.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Criar a função somarLinha()</div>
+              <p>Recebe um vetor (uma linha da matriz) e retorna a soma de todos seus elementos com o for-each. Simples
+                e reutilizável!</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Mostrar a matriz com as somas</div>
+              <p>Para cada linha, mostramos os valores entre colchetes e chamamos a função para calcular a soma.
+                <em>matriz[i]</em> passa a linha i inteira para a função — o Java entende que uma linha da matriz é um
+                vetor!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content code" data-card="q10">
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span></span><span></span><span></span></div><span
+              class="code-lang">SomaLinhas.java</span><button class="copy-btn" onclick="copyCode(this)">📋
+              Copiar</button>
+          </div>
+          <pre id="code-q10"><span class="kw">import</span> java.util.Scanner;
 
 <span class="kw">public class</span> <span class="ty">SomaLinhas</span> {
 
@@ -1492,72 +1355,80 @@ footer span { color: var(--accent1); }
         sc.close();
     }
 }</pre>
-      </div>
-      <div class="io-grid">
-        <div class="io-box io-in"><div class="io-header">📥 Entrada</div><div class="io-body">Linha 1: 1, 2, 3<br>Linha 2: 4, 5, 6<br>Linha 3: 7, 8, 9</div></div>
-        <div class="io-box io-out"><div class="io-header">📤 Saída</div><div class="io-body">Linha 1: [ 1 2 3 ] → Soma = 6<br>Linha 2: [ 4 5 6 ] → Soma = 15<br>Linha 3: [ 7 8 9 ] → Soma = 24</div></div>
+        </div>
+        <div class="io-grid">
+          <div class="io-box io-in">
+            <div class="io-header">📥 Entrada</div>
+            <div class="io-body">Linha 1: 1, 2, 3<br>Linha 2: 4, 5, 6<br>Linha 3: 7, 8, 9</div>
+          </div>
+          <div class="io-box io-out">
+            <div class="io-header">📤 Saída</div>
+            <div class="io-body">Linha 1: [ 1 2 3 ] → Soma = 6<br>Linha 2: [ 4 5 6 ] → Soma = 15<br>Linha 3: [ 7 8 9 ] →
+              Soma = 24</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-</main>
+  </main>
 
-<footer>
-  <p>Feito com ☕ para alunos de Informática do Ensino Médio</p>
-  <p style="margin-top:0.5rem; font-size:0.8rem;">Bons estudos! <span>🚀</span></p>
-</footer>
+  <footer>
+    <p>Feito com ☕ para alunos de Informática do Ensino Médio</p>
+    <p style="margin-top:0.5rem; font-size:0.8rem;">Bons estudos! <span>🚀</span></p>
+  </footer>
 
-<script>
-// ── MENU ──
-function toggleMenu() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
-}
+  <script>
+    // ── MENU ──
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
 
-// ── TABS ──
-function switchTab(btn, type, card) {
-  const cardEl = document.getElementById(card);
-  cardEl.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  cardEl.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  cardEl.querySelector(`.tab-content.${type}`).classList.add('active');
-}
+    // ── TABS ──
+    function switchTab(btn, type, card) {
+      const cardEl = document.getElementById(card);
+      cardEl.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      cardEl.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      cardEl.querySelector(`.tab-content.${type}`).classList.add('active');
+    }
 
-// ── COPY ──
-function copyCode(btn) {
-  const pre = btn.closest('.code-wrap').querySelector('pre');
-  const text = pre.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✅ Copiado!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
-  });
-}
+    // ── COPY ──
+    function copyCode(btn) {
+      const pre = btn.closest('.code-wrap').querySelector('pre');
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✅ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
 
-// ── SCROLL PROGRESS ──
-window.addEventListener('scroll', () => {
-  const el = document.documentElement;
-  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
-  document.getElementById('progress').style.width = pct + '%';
-});
+    // ── SCROLL PROGRESS ──
+    window.addEventListener('scroll', () => {
+      const el = document.documentElement;
+      const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
 
-// ── INTERSECTION OBSERVER (fade-in cards) ──
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.05 });
-document.querySelectorAll('.question-card').forEach(c => observer.observe(c));
+    // ── INTERSECTION OBSERVER (fade-in cards) ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.question-card').forEach(c => observer.observe(c));
 
-// ── SIDEBAR ACTIVE LINK ──
-const sections = document.querySelectorAll('.question-card');
-const links = document.querySelectorAll('.sidebar a');
-window.addEventListener('scroll', () => {
-  let cur = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.id; });
-  links.forEach(l => {
-    l.classList.remove('active');
-    if (l.getAttribute('href') === '#' + cur) l.classList.add('active');
-  });
-});
-</script>
+    // ── SIDEBAR ACTIVE LINK ──
+    const sections = document.querySelectorAll('.question-card');
+    const links = document.querySelectorAll('.sidebar a');
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.id; });
+      links.forEach(l => {
+        l.classList.remove('active');
+        if (l.getAttribute('href') === '#' + cur) l.classList.add('active');
+      });
+    });
+  </script>
 </body>
+
 </html>
