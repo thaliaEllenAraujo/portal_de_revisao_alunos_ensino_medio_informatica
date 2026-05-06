@@ -35,6 +35,7 @@
       <a class="toc-item" href="#paginas"><span class="num">10</span> Mudar de página</a>
       <a class="toc-item" href="#fontes"><span class="num">11</span> Fontes do Google</a>
       <a class="toc-item" href="#responsivo"><span class="num">12</span> Site responsivo</a>
+      <a class="toc-item" href="#css-externo"><span class="num">13</span> Adicionar arquivo css</a>
     </div>
   </nav>
 
@@ -808,6 +809,94 @@
         <span class="icon">📱</span>
         <span>No navegador, pressione <strong>F12</strong> e clique no ícone de celular para simular como seu site
           aparece no smartphone!</span>
+      </div>
+    </section>
+
+    <!-- ==================== 13 ==================== -->
+    <section class="section" id="css-externo">
+      <div class="section-header">
+        <span class="section-num">13</span>
+        <h2>Como conectar o arquivo CSS ao HTML</h2>
+      </div>
+
+      <div class="explanation">
+        O CSS normalmente fica em um arquivo separado. Isso ajuda a organizar o projeto e reutilizar estilos em várias
+        páginas.
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-tip">📁 Estrutura de arquivos</span>
+        </div>
+        <pre>meu-site/
+├── index.html
+└── styles.css</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-html">HTML — Importando o CSS</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+
+        <pre><span class="tag">&lt;head&gt;</span>
+
+  <span class="com">&lt;!-- Conecta o arquivo CSS ao HTML --&gt;</span>
+  <span class="tag">&lt;link</span>
+    <span class="attr">rel</span>=<span class="str">"stylesheet"</span>
+    <span class="attr">href</span>=<span class="str">"styles.css"</span>
+  <span class="tag">&gt;</span>
+
+<span class="tag">&lt;/head&gt;</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-css">CSS — styles.css</span>
+          <button class="copy-btn" onclick="copiar(this)">copiar</button>
+        </div>
+
+        <pre><span class="sel">body</span> {
+  <span class="prop">background</span>: <span class="str">#0f172a</span>;
+  <span class="prop">color</span>: <span class="str">white</span>;
+  <span class="prop">font-family</span>: <span class="str">Arial, sans-serif</span>;
+}
+
+<span class="sel">h1</span> {
+  <span class="prop">color</span>: <span class="str">#4f9cf9</span>;
+}</pre>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <div class="preview-dot" style="background:#ff5f57"></div>
+          <div class="preview-dot" style="background:#febc2e"></div>
+          <div class="preview-dot" style="background:#28c840"></div>
+          <span class="preview-label">resultado no navegador</span>
+        </div>
+
+        <div class="preview-content"
+          style="background:#0f172a;color:white;padding:30px;font-family:Arial;border-radius:10px">
+          <h1 style="color:#4f9cf9">Meu Site</h1>
+          <p>O CSS foi carregado com sucesso 🎉</p>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="icon">💡</span>
+        <span>
+          O atributo <strong>href</strong> informa o caminho do arquivo CSS.
+          Se o CSS estiver em outra pasta, o caminho muda:
+          <strong>href=\"css/styles.css\"</strong>
+        </span>
+      </div>
+
+      <div class="warn">
+        <span class="icon">⚠️</span>
+        <span>
+          O arquivo CSS precisa existir no local correto.
+          Se o nome ou caminho estiver errado, o estilo não será aplicado.
+        </span>
       </div>
     </section>
 
